@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carrinho — Qualidade Única</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo">
+      <span class="mark">Q</span>
+      Qualidade Única
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Início</a>
+      <a href="carrinho.html" class="cart-link">
+        Carrinho <span class="cart-count" data-cart-count>0</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<section class="section container">
+  <h2>Seu carrinho</h2>
+  <div id="cart-container"></div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>&copy; <span id="year"></span> Qualidade Única. Todos os direitos reservados.</span>
+    <div class="footer-links">
+      <a href="politica-de-troca.html">Política de troca</a>
+      <a href="termos.html">Termos de uso</a>
+      <a href="privacidade.html">Privacidade</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/render.js"></script>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+  renderCartPage();
+</script>
+</body>
+</html>

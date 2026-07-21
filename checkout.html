@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Qualidade Única</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="logo">
+      <span class="mark">Q</span>
+      Qualidade Única
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Início</a>
+      <a href="carrinho.html" class="cart-link">
+        Carrinho <span class="cart-count" data-cart-count>0</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<section class="section container">
+  <h2>Finalizar compra</h2>
+
+  <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:start">
+    <form id="checkout-form" onsubmit="handleCheckoutSubmit(event)">
+      <div class="form-grid">
+        <div class="full">
+          <label for="nome">Nome completo *</label>
+          <input type="text" id="nome" required>
+        </div>
+        <div>
+          <label for="email">E-mail *</label>
+          <input type="email" id="email" required>
+        </div>
+        <div>
+          <label for="telefone">Telefone</label>
+          <input type="tel" id="telefone">
+        </div>
+        <div class="full">
+          <label for="endereco">Endereço completo *</label>
+          <input type="text" id="endereco" required placeholder="Rua, número, complemento, bairro">
+        </div>
+        <div>
+          <label for="cidade">Cidade *</label>
+          <input type="text" id="cidade" required>
+        </div>
+        <div>
+          <label for="cep">CEP *</label>
+          <input type="text" id="cep" required>
+        </div>
+      </div>
+      <p id="checkout-error" style="color:#B42318;font-size:13px;margin-bottom:12px"></p>
+      <button type="submit" class="btn" id="checkout-submit">Ir para o pagamento</button>
+      <p class="meta-line" style="margin-top:10px">Você será redirecionado para o ambiente seguro do Mercado Pago (Pix, cartão ou boleto).</p>
+    </form>
+
+    <div class="summary-box" style="margin-left:0;max-width:none">
+      <div id="checkout-summary"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>&copy; <span id="year"></span> Qualidade Única. Todos os direitos reservados.</span>
+    <div class="footer-links">
+      <a href="politica-de-troca.html">Política de troca</a>
+      <a href="termos.html">Termos de uso</a>
+      <a href="privacidade.html">Privacidade</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/render.js"></script>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+  renderCheckoutSummary();
+</script>
+</body>
+</html>
