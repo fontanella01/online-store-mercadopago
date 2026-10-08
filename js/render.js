@@ -166,10 +166,10 @@ async function handleCheckoutSubmit(event) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        // só id e quantidade: o servidor busca nome e preço no catálogo dele
         items: items.map(item => ({
-          title: item.nome,
-          quantity: item.quantidade,
-          unit_price: item.precoVenda
+          id: item.id,
+          quantity: item.quantidade
         })),
         payer
       })
