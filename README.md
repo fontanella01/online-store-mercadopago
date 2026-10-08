@@ -1,70 +1,83 @@
-# Qualidade Única — site da loja
+# Online Store with Mercado Pago Checkout
 
-Site simples em HTML/CSS/JS puro (sem framework), com pagamento via Mercado Pago Checkout Pro.
-Não precisa instalar nada nem rodar `npm install` — é só publicar os arquivos.
+A lightweight e-commerce storefront built with **plain HTML, CSS and JavaScript** (no framework, no build step) and **serverless functions on Cloudflare Pages** that create payments through **Mercado Pago Checkout Pro** (Pix, card and boleto).
 
-## Estrutura
+Built in one day as a complete, deployable store: catalog, product pages, cart, checkout, payment return page and the legal pages required in Brazil (returns policy, terms and privacy/LGPD).
+
+| Catalog | Cart |
+|---|---|
+| ![Catalog](docs/home.png) | ![Cart](docs/cart.png) |
+
+![Product page](docs/product.png)
+
+## Features
+
+- Product catalog and product detail pages
+- Cart stored in `localStorage`, with quantity editing and totals
+- Checkout form that creates a Mercado Pago payment preference and redirects the customer
+- Payment confirmation page (approved / pending / failed) and webhook endpoint for payment notifications
+- Returns policy, terms of use and privacy policy pages
+- Zero dependencies: deploy the folder as-is
+
+## Architecture
 
 ```
-index.html              -> página inicial + catálogo
-produto.html            -> página de um produto (ex: produto.html?id=produto-1)
-carrinho.html           -> carrinho de compras
-checkout.html           -> formulário de dados + botão de pagamento
-confirmacao.html        -> página de retorno do Mercado Pago
-politica-de-troca.html  -> obrigatória pelo Código de Defesa do Consumidor
-termos.html
-privacidade.html        -> obrigatória pela LGPD
-css/style.css           -> todo o visual do site (cor principal em --brand)
-js/products.js          -> lista de produtos (EDITE AQUI para trocar produtos)
-js/cart.js              -> lógica do carrinho (não precisa mexer)
-js/render.js            -> lógica de cada página (não precisa mexer)
-functions/criar-pagamento.js     -> cria o pagamento no Mercado Pago
-functions/webhook-mercadopago.js -> recebe aviso de pagamento do Mercado Pago
+Browser (static HTML/JS)          Cloudflare Pages Functions          Mercado Pago
+---------------------------       ----------------------------        -------------
+cart: [{ id, quantity }]  ──POST /criar-pagamento──▶  validates items,
+                                   reads prices from    ──create preference──▶
+                                   functions/_catalog.js
+                          ◀── redirect URL (init_point) ──
+                                   /webhook-mercadopago ◀── payment notifications
 ```
 
-## 1. Trocar os produtos
+- `functions/_catalog.js` is the **server-side source of truth** for product names and prices. Files in `functions/` are not served as static assets, so internal data (cost, supplier) stays private.
+- `js/products.js` holds only what the customer sees.
 
-Abra `js/products.js` e edite a lista `PRODUCTS`. Cada produto tem:
-nome, preço de venda, preço de custo (uso interno), descrição, fornecedor, prazo de entrega.
-Salve o arquivo — não precisa mais nada, o site lê direto dali.
+## Security
 
-Fotos: por enquanto os produtos aparecem com um retângulo cinza no lugar da foto.
-Quando tiver as imagens reais, hospede-as (ex: numa pasta `imagens/` dentro deste projeto)
-e preencha o campo `imagem` de cada produto com o caminho do arquivo.
+An early version trusted the `unit_price` sent by the browser, which meant anyone could edit the request and pay any amount for a product. It was fixed by:
 
-## 2. Criar conta no Mercado Pago
+- sending only **product id and quantity** from the browser
+- looking up name and price **on the server** (`functions/_catalog.js`)
+- validating product ids and quantities (integers from 1 to 20)
+- moving cost and supplier data out of the public catalog
+- logging Mercado Pago errors on the server instead of returning them to the client
 
-1. Crie uma conta em mercadopago.com.br (grátis).
-2. Vá em "Seu negócio" > "Configurações" > "Credenciais" (ou acesse o painel de desenvolvedores).
-3. Copie o **Access Token** — primeiro use o de **teste** (sandbox) para validar tudo antes de ligar o modo real.
-4. Nunca compartilhe login/senha da conta — só o Access Token é necessário para a integração.
+The Mercado Pago access token is read from an environment variable and never shipped to the browser.
 
-## 3. Publicar no Cloudflare Pages
+## Project structure
 
-1. Crie uma conta gratuita em pages.cloudflare.com.
-2. Suba esta pasta para um repositório no GitHub (crie uma conta gratuita em github.com se ainda não tiver).
-3. No Cloudflare Pages, clique em "Create a project" > "Connect to Git" e selecione o repositório.
-4. Em "Build settings": Framework preset = "None", Build command = (deixe em branco), Output directory = `/`.
-5. Em "Environment variables", adicione:
-   - `MP_ACCESS_TOKEN` = o Access Token do Mercado Pago (comece com o de teste)
-   - `SITE_URL` = a URL que o Cloudflare vai gerar (ex: https://qualidade-unica.pages.dev) — depois troque pelo domínio próprio
-6. Clique em "Save and Deploy".
+```
+index.html, produto.html, carrinho.html, checkout.html, confirmacao.html
+politica-de-troca.html, termos.html, privacidade.html
+css/style.css                     -> all styles (brand color in --brand)
+js/products.js                    -> public product list (display only)
+js/cart.js                        -> cart logic (localStorage)
+js/render.js                      -> page rendering and checkout request
+functions/_catalog.js             -> official prices and internal product data
+functions/criar-pagamento.js      -> creates the Mercado Pago payment
+functions/webhook-mercadopago.js  -> receives payment notifications
+```
 
-## 4. Conectar o domínio próprio
+## Running and deploying
 
-No projeto já publicado, vá em "Custom domains" > "Set up a custom domain" e siga as instruções
-(vai pedir pra apontar o DNS do domínio que você comprou pra Cloudflare).
+1. **Products:** edit `functions/_catalog.js` (official price) and `js/products.js` (what is displayed). Keep prices in sync.
+2. **Mercado Pago:** create an account and copy the **test** access token first.
+3. **Deploy on Cloudflare Pages:** connect this repository, framework preset `None`, no build command, output directory `/`.
+4. **Environment variables:**
+   - `MP_ACCESS_TOKEN`: Mercado Pago access token (start with the test one)
+   - `SITE_URL`: your site URL, e.g. `https://my-store.pages.dev`
+5. Test a full purchase with the test token, then switch to the production token.
 
-## 5. Testar antes de vender de verdade
+To preview the static pages locally: `npx http-server .` (the checkout needs the Cloudflare functions to run).
 
-Com o Access Token de teste configurado, faça uma compra completa no site publicado.
-O Mercado Pago vai simular o pagamento sem cobrar nada de verdade.
-Só depois de confirmar que o fluxo completo funciona (compra > pagamento > confirmação),
-troque o `MP_ACCESS_TOKEN` pelo Access Token de **produção** no painel do Cloudflare Pages.
+## Next steps
 
-## Observação sobre estoque/fornecedor
+- Process the webhook: fetch the payment by id and send an order confirmation e-mail
+- Product images and stock control
+- Automated tests running in CI
 
-Este site não faz o pedido automático no fornecedor. Quando cair uma venda, você recebe
-o pedido (por enquanto, só aparece nos logs do Cloudflare em "webhook-mercadopago" —
-uma notificação por e-mail pode ser adicionada depois) e faz a compra manualmente
-no fornecedor, usando o endereço do cliente informado no checkout.
+---
+
+Made by [Vinícius Fontanella Kleis](https://www.linkedin.com/in/vinicius-fontanella/).
