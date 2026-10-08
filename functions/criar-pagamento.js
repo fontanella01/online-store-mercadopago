@@ -4,6 +4,37 @@
 //   MP_ACCESS_TOKEN -> Access Token do Mercado Pago (de teste ou de produção)
 //   SITE_URL        -> URL do seu site, ex: https://qualidadeunica.com.br
 
+import { CATALOG, MAX_QUANTIDADE_POR_ITEM } from "./_catalog.js";
+
+// Monta os itens do pagamento a partir do catálogo do servidor.
+// O navegador manda só { id, quantity }: nome e preço vêm do CATALOG, então
+// ninguém consegue alterar o valor cobrado editando a requisição.
+export function buildItems(items) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return { error: "Carrinho vazio" };
+  }
+
+  const result = [];
+  for (const item of items) {
+    const produto = CATALOG[item && item.id];
+    if (!produto) {
+      return { error: "Produto inválido" };
+    }
+    const quantity = Number(item.quantity);
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTIDADE_POR_ITEM) {
+      return { error: "Quantidade inválida" };
+    }
+    result.push({
+      id: item.id,
+      title: produto.nome,
+      quantity,
+      currency_id: "BRL",
+      unit_price: produto.precoVenda
+    });
+  }
+  return { items: result };
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -15,9 +46,9 @@ export async function onRequestPost(context) {
   }
 
   const { items, payer } = body || {};
-
-  if (!Array.isArray(items) || items.length === 0) {
-    return jsonResponse({ error: "Carrinho vazio" }, 400);
+  const built = buildItems(items);
+  if (built.error) {
+    return jsonResponse({ error: built.error }, 400);
   }
 
   if (!env.MP_ACCESS_TOKEN) {
@@ -27,12 +58,7 @@ export async function onRequestPost(context) {
   const siteUrl = env.SITE_URL || `${new URL(request.url).origin}`;
 
   const preference = {
-    items: items.map(item => ({
-      title: String(item.title).slice(0, 250),
-      quantity: Number(item.quantity) || 1,
-      currency_id: "BRL",
-      unit_price: Number(item.unit_price)
-    })),
+    items: built.items,
     payer: payer ? {
       name: payer.nome,
       email: payer.email,
@@ -61,7 +87,9 @@ export async function onRequestPost(context) {
     const data = await mpResponse.json();
 
     if (!mpResponse.ok) {
-      return jsonResponse({ error: data }, 500);
+      // o detalhe do erro fica no log do servidor; o cliente recebe uma mensagem genérica
+      console.error("Erro do Mercado Pago:", JSON.stringify(data));
+      return jsonResponse({ error: "Falha ao criar pagamento" }, 502);
     }
 
     return jsonResponse({
@@ -69,7 +97,8 @@ export async function onRequestPost(context) {
       sandbox_init_point: data.sandbox_init_point
     });
   } catch (err) {
-    return jsonResponse({ error: String(err) }, 500);
+    console.error("Erro ao chamar o Mercado Pago:", err);
+    return jsonResponse({ error: "Falha ao criar pagamento" }, 502);
   }
 }
 
