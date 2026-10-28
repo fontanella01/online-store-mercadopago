@@ -56,9 +56,12 @@ export async function onRequestPost(context) {
   }
 
   const siteUrl = env.SITE_URL || `${new URL(request.url).origin}`;
+  // Número do pedido gerado aqui; volta no webhook como external_reference.
+  const orderId = `QU-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
 
   const preference = {
     items: built.items,
+    external_reference: orderId,
     payer: payer ? {
       name: payer.nome,
       email: payer.email,
@@ -93,6 +96,7 @@ export async function onRequestPost(context) {
     }
 
     return jsonResponse({
+      order_id: orderId,
       init_point: data.init_point,
       sandbox_init_point: data.sandbox_init_point
     });

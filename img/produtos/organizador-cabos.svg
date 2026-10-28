@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Organizador magnético de cabos">
+  <rect width="400" height="400" fill="#FAECE7"/>
+  <rect x="40" y="250" width="320" height="22" rx="6" fill="#E9D3CA"/>
+  <path d="M60 120c80 0 60 130 140 130" fill="none" stroke="#1F2937" stroke-width="12" stroke-linecap="round"/>
+  <path d="M130 90c40 0 30 160 90 160" fill="none" stroke="#6B7280" stroke-width="12" stroke-linecap="round"/>
+  <path d="M340 110c-70 0-50 140-120 140" fill="none" stroke="#D85A30" stroke-width="12" stroke-linecap="round"/>
+  <rect x="120" y="226" width="56" height="34" rx="12" fill="#993C1D"/>
+  <rect x="192" y="226" width="56" height="34" rx="12" fill="#D85A30"/>
+  <rect x="264" y="226" width="56" height="34" rx="12" fill="#993C1D"/>
+  <rect x="132" y="234" width="32" height="8" rx="4" fill="#FAECE7" opacity=".6"/>
+  <rect x="204" y="234" width="32" height="8" rx="4" fill="#FAECE7" opacity=".6"/>
+  <rect x="276" y="234" width="32" height="8" rx="4" fill="#FAECE7" opacity=".6"/>
+  <rect x="44" y="104" width="22" height="34" rx="5" fill="#1F2937"/>
+  <rect x="120" y="70" width="20" height="30" rx="5" fill="#6B7280"/>
+  <rect x="334" y="94" width="22" height="34" rx="5" fill="#D85A30"/>
+</svg>

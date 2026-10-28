@@ -123,7 +123,7 @@ nav.main-nav a:hover { color: var(--brand); }
 
 /* Product grid */
 .section {
-  padding: 48px 0;
+  padding-block: 48px;
 }
 
 .section h2 {
@@ -393,4 +393,35 @@ input[type="text"], input[type="email"], input[type="tel"] {
 .status-box .icon {
   font-size: 48px;
   margin-bottom: 16px;
+}
+
+/* Imagem ocupa o quadro todo; o padding fica só para o texto do placeholder */
+.product-thumb:has(img) {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Botão "Comprar" sempre alinhado no rodapé do card, com título de 1 ou 2 linhas */
+.product-info .btn {
+  margin-top: auto;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand-dark);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card,
+  .product-card:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo { font-size: 17px; white-space: nowrap; }
+  nav.main-nav a:not(.cart-link) { display: none; }
+  .hero { padding: 40px 0; }
+  .hero h1 { font-size: 26px; }
 }

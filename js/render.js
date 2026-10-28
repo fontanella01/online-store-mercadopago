@@ -3,7 +3,7 @@
 
 function productThumbHTML(produto) {
   if (produto.imagem) {
-    return `<img src="${produto.imagem}" alt="${produto.nome}" style="width:100%;height:100%;object-fit:cover">`;
+    return `<img src="${produto.imagem}" alt="${produto.nome}" loading="lazy" style="width:100%;height:100%;object-fit:cover">`;
   }
   return `<span>Foto do produto<br>(${produto.nome})</span>`;
 }
@@ -182,7 +182,7 @@ async function handleCheckoutSubmit(event) {
     }
 
     // Guarda o pedido localmente antes de sair pro Mercado Pago, útil para a página de confirmação.
-    sessionStorage.setItem("qu_last_order", JSON.stringify({ items, payer }));
+    sessionStorage.setItem("qu_last_order", JSON.stringify({ orderId: data.order_id, items, payer }));
 
     window.location.href = data.init_point || data.sandbox_init_point;
   } catch (err) {
@@ -226,8 +226,18 @@ function renderConfirmacao() {
   container.innerHTML = `
     <h1 style="color:${info.cor}">${info.titulo}</h1>
     <p>${info.texto}</p>
+    <p class="meta-line" id="order-number"></p>
     <a class="btn btn-outline" href="index.html" style="width:auto;display:inline-flex;padding:10px 20px;margin-top:20px">Voltar para a loja</a>
   `;
+
+  try {
+    const lastOrder = JSON.parse(sessionStorage.getItem("qu_last_order") || "null");
+    if (lastOrder && lastOrder.orderId) {
+      document.getElementById("order-number").textContent = "Número do pedido: " + lastOrder.orderId;
+    }
+  } catch (e) {
+    // sem pedido salvo nesta aba, a página funciona do mesmo jeito
+  }
 
   if (status === "success" || status === "approved") {
     clearCart();

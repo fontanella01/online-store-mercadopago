@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Massageador de pescoço">
+  <rect width="400" height="400" fill="#FAECE7"/>
+  <ellipse cx="200" cy="318" rx="130" ry="16" fill="#E9D3CA"/>
+  <path d="M90 170c0 90 50 140 110 140s110-50 110-140" fill="none" stroke="#1F2937" stroke-width="44" stroke-linecap="round"/>
+  <path d="M90 170c0 90 50 140 110 140s110-50 110-140" fill="none" stroke="#D85A30" stroke-width="30" stroke-linecap="round"/>
+  <circle cx="90" cy="168" r="30" fill="#993C1D"/>
+  <circle cx="310" cy="168" r="30" fill="#993C1D"/>
+  <circle cx="90" cy="168" r="12" fill="#FAECE7"/>
+  <circle cx="310" cy="168" r="12" fill="#FAECE7"/>
+  <rect x="170" y="292" width="60" height="18" rx="9" fill="#1F2937"/>
+  <circle cx="186" cy="301" r="4" fill="#7FD3A8"/>
+  <circle cx="200" cy="301" r="4" fill="#FAECE7"/>
+  <circle cx="214" cy="301" r="4" fill="#FAECE7"/>
+  <path d="M150 110c10-14 20-14 30 0s20 14 30 0 20-14 30 0" fill="none" stroke="#D85A30" stroke-width="6" stroke-linecap="round" opacity=".5"/>
+</svg>

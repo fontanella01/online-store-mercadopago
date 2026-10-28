@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Luminária com carregador wireless">
+  <rect width="400" height="400" fill="#FAECE7"/>
+  <path d="M262 132 300 290H150Z" fill="#FFE8A3" opacity=".55"/>
+  <ellipse cx="200" cy="322" rx="140" ry="14" fill="#E9D3CA"/>
+  <rect x="80" y="290" width="200" height="32" rx="16" fill="#1F2937"/>
+  <path d="M120 290V150l110-50" fill="none" stroke="#1F2937" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M206 88l70 30-14 30-70-30z" fill="#D85A30"/>
+  <circle cx="120" cy="150" r="10" fill="#993C1D"/>
+  <rect x="170" y="252" width="84" height="38" rx="10" fill="#D85A30"/>
+  <circle cx="212" cy="271" r="10" fill="none" stroke="#FAECE7" stroke-width="4"/>
+  <path d="M212 241c-10-8-10-18 0-26M226 241c8-8 8-18 0-26" fill="none" stroke="#7FD3A8" stroke-width="4" stroke-linecap="round"/>
+</svg>
